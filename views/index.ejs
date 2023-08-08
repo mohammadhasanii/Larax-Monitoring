@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Larax-Monitoring</title>
+   
+    <script src="https://cdn.tailwindcss.com"></script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body class="container mx-auto">
+   
+    <header class="flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full text-sm">
+      <nav class="mt-6 relative max-w-7xl w-full bg-white border border-gray-200 rounded-lg mx-2 py-3 px-4 md:flex md:items-center md:justify-between md:py-0 md:px-6 lg:px-8 xl:mx-auto dark:bg-gray-800 dark:border-gray-700" aria-label="Global">
+        <div class="flex items-center justify-between">
+          <a class="flex-none text-xl bg-gradient-to-r from-fuchsia-500 to-cyan-500 bg-clip-text text-transparent font-bold dark:text-white" href="#" aria-label="Brand">Larax-Monitoring</a>
+          <div class="md:hidden">
+            <button type="button" class="hs-collapse-toggle p-2 inline-flex justify-center items-center gap-2 rounded-full border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm dark:bg-slate-900 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:focus:ring-offset-gray-800" data-hs-collapse="#navbar-collapse-with-animation" aria-controls="navbar-collapse-with-animation" aria-label="Toggle navigation">
+              <svg class="hs-collapse-open:hidden w-4 h-4" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+              </svg>
+              <svg class="hs-collapse-open:block hidden w-4 h-4" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div id="navbar-collapse-with-animation" class="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow md:block">
+          <div class="flex flex-col gap-y-4 gap-x-0 mt-5 md:flex-row md:items-center md:justify-end md:gap-y-0 md:gap-x-7 md:mt-0 md:pl-7">
+           
+            <a class="flex items-center gap-x-2 font-medium text-gray-500 hover:text-blue-600 md:border-l md:border-gray-300 md:my-6 md:pl-6 dark:border-gray-700 dark:text-gray-400 dark:hover:text-blue-500" href="#">
+             
+              Donate
+            </a>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+
+
+
+<script>
+
+
+
+function fetchData() {
+  fetch('/statistics')
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('requestCount').textContent = data.requestCount;
+      document.getElementById('averageResponseTime').textContent = data.averageResponseTime.toFixed(0) 
+      document.getElementById('maxResponseTime').textContent = data.maxResponseTime.toFixed() 
+      document.getElementById('recentLogsCount').textContent = data.recentLogsCount;
+
+    })
+    .catch(error => console.error('Error fetching log statistics:', error));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // فراخوانی اولیه برای دریافت داده‌ها
+  fetchData();
+
+  // فراخوانی تابع fetchData هر 5 ثانیه
+  setInterval(fetchData, 5000);
+});
+
+
+
+</script>
+
+
+<div class="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+    <div class="flex flex-col border rounded-xl dark:border-gray-800">
+      <div class="p-4 md:p-5">
+        <div class="flex items-center gap-x-2">
+          <p class="text-sm font-semibold text-gray-500">
+            All Requests
+          </p>
+          <div class="hs-tooltip">
+            <div class="hs-tooltip-toggle">
+              <svg class="w-3.5 h-3.5 text-gray-500" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+              </svg>
+              <span class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded-md shadow-sm dark:bg-slate-700" role="tooltip">
+                The number of domains
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="mt-2 text-2xl sm:text-3xl lg:text-4xl text-gray-800 dark:text-gray-200">
+          <span id="requestCount" class="font-semibold">0</span>
+        </h3>
+      </div>
+    </div>
+ 
+    <div class="flex flex-col border rounded-xl dark:border-gray-800">
+      <div class="p-4 md:p-5">
+        <div class="flex items-center gap-x-2">
+          <p class="text-sm font-semibold text-gray-500">
+            Request Per Second
+          </p>
+        </div>
+
+        <h3 class="mt-2 text-2xl sm:text-3xl lg:text-4xl text-gray-800 dark:text-gray-200">
+          <span id="recentLogsCount" class="font-semibold">1</span> <span class="text-gray-500">/ HTTP</span>
+        </h3>
+      </div>
+    </div>
+    <!-- End Card -->
+
+    <!-- Card -->
+    <div class="flex flex-col border rounded-xl dark:border-gray-800">
+      <div class="p-4 md:p-5">
+        <div class="flex items-center gap-x-2">
+          <p class="text-sm font-semibold text-gray-500">
+            Avarage ResponseTime
+          </p>
+          <div class="hs-tooltip">
+            <div class="hs-tooltip-toggle">
+              <svg class="w-3.5 h-3.5 text-gray-500" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+              </svg>
+              <span class="hs-tooltip-content hs-tooltip-shown:opacity-100 hs-tooltip-shown:visible opacity-0 transition-opacity inline-block absolute invisible z-10 py-1 px-2 bg-gray-900 text-xs font-medium text-white rounded-md shadow-sm dark:bg-slate-700" role="tooltip">
+                The number of requests your Deployments have received.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="mt-2 text-2xl sm:text-3xl lg:text-4xl text-gray-800 dark:text-gray-200">
+          <span id="averageResponseTime" class="font-semibold">0</span> <span class="text-gray-500">/ Ms</span>
+        </h3>
+      </div>
+    </div>
+    <!-- End Card -->
+
+    <!-- Card -->
+    <div class="flex flex-col border rounded-xl dark:border-gray-800">
+      <div class="p-4 md:p-5">
+        <div class="flex items-center gap-x-2">
+          <p class="text-sm font-semibold text-gray-500">
+            Max ResponseTime
+          </p>
+        </div>
+
+        <h3 class="mt-2 text-2xl sm:text-3xl lg:text-4xl text-gray-800 dark:text-gray-200">
+          <span id="maxResponseTime" class="font-semibold">8</span> <span class="text-gray-500">/ Ms</span>
+        </h3>
+      </div>
+    </div>
+    <!-- End Card -->
+  </div>
+  <!-- End Grid -->
+</div>
+<!-- End Card Section -->
+
+
+
+
+
+<div class="w-5/6 mx-auto">
+  <canvas class="shadow-2xl p-2 rounded-lg my-5 " id="myChart"></canvas>
+
+</div>
+
+   
+
+    <script>
+
+      
+      var ctx = document.getElementById('myChart').getContext('2d');
+      var chart;
+
+      function requestDataAndUpdateChart() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/status', true);
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+            var responseData = JSON.parse(xhr.responseText);
+
+            var labels = responseData.map(function (data) {
+              return data.startTime;
+            });
+            var requestCounts = responseData.map(function (data) {
+              return data.requestCount;
+            });
+
+            // به‌روزرسانی داده‌های نمودار
+            chart.data.labels = labels;
+            chart.data.datasets[0].data = requestCounts;
+            chart.update();
+          }
+        };
+        xhr.send();
+      }
+
+      // ایجاد نمودار اولیه
+      function createInitialChart() {
+        var chartData = {
+          labels: [],
+          datasets: [
+            {
+              label: 'Requests',
+              data: [],
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1,
+              fill: false,
+              tension: 0.4,
+            },
+          ],
+        };
+        var chartOptions = {
+          scales: {
+            x: {
+              type: 'category',
+              offset: true,
+              grid: {
+                display: true,
+              },
+              ticks: {
+                maxRotation: 0,
+                autoSkip: false,
+                maxTicksLimit: 12,
+              },
+            },
+            y: {
+              beginAtZero: true,
+            },
+          },
+        };
+
+        chart = new Chart(ctx, {
+          type: 'line',
+          data: chartData,
+          options: chartOptions,
+        });
+      }
+
+      // فراخوانی تابع createInitialChart برای ایجاد نمودار اولیه
+      createInitialChart();
+
+      // تنظیم فاصله زمانی برای به‌روزرسانی نمودار (اینجا 1000 میلی‌ثانیه است که هر یک ثانیه یک بار اجرا می‌شود)
+      setInterval(requestDataAndUpdateChart, 5000);
+    </script>
+  </body>
+
+
+
+
+  <footer class="py-4 text-gray-700 text-xs  my-12  mt-20">
+    <div class="container flex justify-center font-bold text-gray-500">
+      
+      <div>
+        Powered by
+        <span class=" text-black font-bold text-gray-700 "><a href="https://bettercode.ir">Bettercode</a></span>
+      </div>
+    </div>
+  </footer>
+  
+</html>
